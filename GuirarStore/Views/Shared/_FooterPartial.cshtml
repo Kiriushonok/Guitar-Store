@@ -1,0 +1,44 @@
+﻿@inject IConfiguration config
+@{
+    AppConfig? appConfig = config.GetSection("Project").Get<AppConfig>();
+}
+<footer>
+    <div class="social-media-links">
+        <img src="icons/guitar-logo.jpg" alt="brand icon" />
+        <span>Мы в социальных сетях</span>
+        <div>
+            <a href=""><img src="icons/icons8-vk.svg" alt="vk" /></a>
+            <a href="">
+                <img width="52"
+                src="icons/icons8-youtube.svg"
+                alt="youtube" />
+            </a>
+        </div>
+    </div>
+
+    @{
+        var links = new[]
+        {
+            new {Href = "#", Text = "Каталог гитар"}, // добавить
+            new {Href = "#", Text = "Контакты"}, // добавить
+            new {Href = "#", Text = "Оферта и политика конфиденциальности"} // добавить
+        };
+
+        var contacts = appConfig?.Company?.Contacts ?? Array.Empty<Company.Contact>();
+    }
+
+    <table>
+        @for (int i = 0; i < links.Length; i++)
+        {
+            var contact = i < contacts.Length ? contacts[i] : null;
+            <tr>
+                <td><a href="@links[i].Href">@links[i].Text</a></td>
+                <td>
+                    @contact?.City : 
+                    <br />
+                    @contact?.Number
+                </td> 
+            </tr>
+        }
+    </table>
+</footer>

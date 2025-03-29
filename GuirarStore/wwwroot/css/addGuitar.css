@@ -1,0 +1,81 @@
+
+.form-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+}
+
+/* Стили для описания */
+.service-description {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+    padding: 30px;
+}
+
+/* Стили для формы */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-size: 16px;
+    color: #333;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 5px;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 14px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 4px;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* Ошибки валидации */
+.error {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Успешное сообщение */
+.success-message {
+    color: green;
+    font-size: 16px;
+    margin-top: 20px;
+}

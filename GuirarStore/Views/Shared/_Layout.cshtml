@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    @await Html.PartialAsync("_MetaPartial");
+    @await Html.PartialAsync("_CssPartial");
+</head>
+<body>
+
+    <main>
+        <div class="photo-zone">
+            <img src="img/guitar-banner.jpg" alt="Фото" />
+        </div>
+
+        <div class="brand">
+            <h1 class="brand-title">Guitar Store</h1>
+            <div class="brand-article-container">
+                <img src="icons/guitar-logo.jpg"
+                     alt="guitar-icon"
+                     class="brand-article-logo" />
+                <div class="brand-article-content">
+                    <h2 class="about-title">О нашем магазине гитар</h2>
+                    <p>
+                        Guitar Store — это место, где страсть к музыке
+                        встречается с качеством и выбором. Мы предлагаем
+                        широкий ассортимент гитар для музыкантов любого
+                        уровня, от новичков до профессионалов. Наша цель —
+                        помочь вам найти идеальный инструмент, который
+                        станет продолжением вашей души и вдохновения.
+                    </p>
+                    <p>
+                        У нас вы найдете не только гитары, но и всё
+                        необходимое для вашей музыкальной карьеры:
+                        аксессуары, оборудование и профессиональную
+                        консультацию. С нами вы всегда на шаг ближе к вашей
+                        мечте!
+                    </p>
+                    <p>
+                        Посетите наш магазин и испытайте магию звука! Мы
+                        ждем вас ежедневно с 10:00 до 20:00. Не упустите
+                        шанс приобрести инструмент вашей мечты!
+                    </p>
+                </div>
+            </div>
+            <hr />
+            <div class="model-line">
+                <h2 class="about-title">Ассортимент гитар</h2>
+                <ul class="model-line-items">
+                    <li class="model-card">
+                        <img src="img/acoustic-guitar.jpg"
+                             alt="acoustic guitar"
+                             class="model-img" />
+                        <p class="brand-article-content">
+                            Акустические гитары для тех, кто ценит чистый и
+                            естественный звук. Идеальны как для сольных
+                            выступлений, так и для игры в составе группы.
+                        </p>
+                    </li>
+                    <li class="model-card">
+                        <img src="img/electric-guitar.jpg"
+                             alt="electric guitar"
+                             class="model-img" />
+                        <p class="brand-article-content">
+                            Электрогитары — выбор для тех, кто любит мощное
+                            звучание и свободу творчества. Широкий выбор
+                            моделей для любого стиля музыки.
+                        </p>
+                    </li>
+                    <li class="model-card">
+                        <img src="img/bass-guitar.jpg"
+                             alt="bass guitar"
+                             class="model-img" />
+                        <p class="brand-article-content">
+                            Бас-гитары, создающие основу и ритм в любой
+                            композиции. Подходят для разных музыкальных
+                            жанров.
+                        </p>
+                    </li>
+                </ul>
+                <a href="catalog.html" class="all-models-btn">Перейти в каталог</a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

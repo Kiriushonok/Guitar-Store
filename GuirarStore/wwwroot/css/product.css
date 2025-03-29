@@ -1,0 +1,195 @@
+/* Основные стили для страницы гитары */
+.guitar-main {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f8f8f8;
+}
+
+.brand-title {
+    font-size: 36px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.guitar-section-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+/* Обзор гитары */
+.guitar-overview {
+    display: flex;
+    gap: 40px;
+    justify-content: space-between;
+    margin-bottom: 40px;
+}
+
+/* Carousel container */
+.guitar-image-container {
+    position: relative;
+    width: 100%;
+    max-width: 600px; /* Adjust the width as needed */
+    margin: 0 auto;
+    overflow: hidden; /* Hide overflow so images that are out of view don't appear */
+}
+
+/* Carousel images wrapper */
+.carousel-images {
+    display: flex;
+    transition: transform 0.5s ease; /* Smooth transition when shifting images */
+}
+
+/* Each image inside the carousel */
+.guitar-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+/* Previous and Next buttons */
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 100;
+}
+
+.prev-btn {
+    left: 10px;
+}
+
+.next-btn {
+    right: 10px;
+}
+
+.carousel-btn:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+
+.prev-btn {
+    left: 10px;
+}
+
+.next-btn {
+    right: 10px;
+}
+
+.guitar-details {
+    flex: 1;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.guitar-description {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.guitar-specs {
+    list-style: none;
+    padding: 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.guitar-specs li {
+    margin-bottom: 10px;
+}
+
+/* Особенности гитары */
+.guitar-features {
+    background-color: #f1f1f1;
+    padding: 40px 20px;
+    border-radius: 10px;
+    margin-bottom: 40px;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 20px;
+}
+
+.feature-item {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.feature-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.feature-text {
+    font-size: 16px;
+    color: #666;
+}
+
+/* Контактная форма */
+.guitar-contact {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.contact-text {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.form-input,
+.form-textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.form-textarea {
+    height: 150px;
+}
+
+.form-button {
+    padding: 12px 25px;
+    font-size: 16px;
+    background-color: #3f51b5;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-button:hover {
+    background-color: #303f9f;
+}
+
+

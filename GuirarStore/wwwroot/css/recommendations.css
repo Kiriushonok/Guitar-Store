@@ -1,0 +1,77 @@
+/* Основной контейнер страницы */
+.guitar-guide {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Контейнер для всей статьи */
+.guitar-guide-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Главный заголовок */
+.guitar-guide-main-title {
+    text-align: center;
+    font-size: 36px;
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+
+/* Основные подзаголовки */
+.guitar-guide-subtitle {
+    font-size: 28px;
+    font-weight: bold;
+    color: #2980b9;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+/* Маленькие подзаголовки */
+.guitar-guide-small-title {
+    font-size: 22px;
+    color: #8e44ad;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+/* Текст статьи */
+.guitar-guide-text {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+/* Заголовок первой статьи */
+.guitar-guide-title-h2 {
+    font-size: 26px;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+/* Стиль для блоков с подзаголовками */
+.guitar-guide-article h3 {
+    font-size: 22px;
+    color: #e74c3c;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+/* Оформление ссылок */
+.guitar-guide-text a {
+    color: #2980b9;
+    text-decoration: none;
+}
+
+.guitar-guide-text a:hover {
+    text-decoration: underline;
+}
+
+/* Отступы и выравнивание текста в абзацах */
+.guitar-guide-text p {
+    text-align: justify;
+    margin-bottom: 15px;
+}
