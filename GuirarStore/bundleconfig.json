@@ -1,0 +1,21 @@
+[
+  {
+    "outputFileName": "wwwroot/css/bundleCSS.css",
+    "inputFiles": [
+      "wwwroot/css/style.css",
+      "wwwroot/css/addGuitar.css",
+      "wwwroot/css/catalog.css",
+      "wwwroot/css/contacts.css",
+      "wwwroot/css/product.css",
+      "wwwroot/css/recommendations.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/scripts.js",
+    "inputFiles": [
+      "wwwroot/js/filter.js",
+      "wwwroot/js/form.js",
+      "wwwroot/js/product.js"
+    ]
+  }
+]
