@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace GuirarStore.Controllers
+namespace GuitarStore.Controllers
 {
     public class HomeController : Controller
     {
