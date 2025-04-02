@@ -23,8 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\Repositories\Abstract\" />
-    <Folder Include="Domain\Repositories\EntityFramework\" />
     <Folder Include="Models\ViewComponents\" />
   </ItemGroup>
 

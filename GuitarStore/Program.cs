@@ -1,4 +1,6 @@
 using GuitarStore.Domain;
+using GuitarStore.Domain.Repositories.Abstract;
+using GuitarStore.Domain.Repositories.EntityFramework;
 using GuitarStore.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +29,10 @@ namespace GuitarStore
             // Подключаем контекст БД
             builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(config.Database.ConnectionString)
                 .ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning)));
+
+            builder.Services.AddTransient<IGuitarRepository, EFGuitarRepository>();
+            builder.Services.AddTransient<IGuitarBrandRepository, EFGuitarBrandRepository>();
+            builder.Services.AddTransient<DataManager>();
 
             // Настраиваем Identity систему
             builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
