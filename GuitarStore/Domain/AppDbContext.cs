@@ -13,12 +13,6 @@ namespace GuitarStore.Domain
         public DbSet<GuitarBrand> GuitarBrands { get; set; } = null!;
         public DbSet<Guitar> Guitars { get; set; } = null!;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.ConfigureWarnings(warnings =>
-                warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
-        }
-
         public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration) : base(options) {
 
             _configuration = configuration;
