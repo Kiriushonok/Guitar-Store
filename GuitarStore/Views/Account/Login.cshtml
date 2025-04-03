@@ -1,1 +1,37 @@
-﻿
+﻿@model LoginViewModel
+@{
+    string strTitle = "Вход в личный кабинет";
+    ViewBag.Title = strTitle;
+}
+
+<main>
+    <div class="div-box">
+        <h1>@strTitle</h1>
+        <form asp-area="" asp-controller="Account" asp-action="Login" method="post" asp-route-returnUrl="@ViewBag.ReturnUrl" class="feedback-form">
+            <div asp-validation-summary="All">
+
+            </div>
+            <div>
+                <label asp-for="UserName"></label>
+                <input asp-for="UserName" />
+                <span asp-validation-for="UserName"></span>
+            </div>
+
+            <div>
+                <label asp-for="Password"></label>
+                <input asp-for="Password" />
+                <span asp-validation-for="Password"></span>
+            </div>
+
+            <div style="display:flex">
+                <label asp-for="RememberMe" style="display:inline"></label>
+                <input asp-for="RememberMe" style="display:inline;width:auto"/>
+                <span asp-validation-for="RememberMe"></span>
+            </div>
+
+            <div>
+                <input type="submit" value="Войти" />
+            </div>
+        </form>
+    </div>
+</main>
