@@ -1,0 +1,66 @@
+﻿@model Guitar
+@{
+    string strTitle = "Редактировать гитару";
+    ViewBag.Title = strTitle;
+}
+
+<main>
+    <div class="form-container">
+        <h2>@strTitle</h2>
+        <form asp-area="" asp-controller="Admin" asp-action="GuitarsEdit" method="post" enctype="multipart/form-data" id="service-form">
+            <input type="hidden" asp-for="Id"/>
+            <input type="hidden" asp-for="DateCreated" />
+            <input type="hidden" asp-for="Photo" />
+
+            <div asp-validation-summary="All"></div>
+            <div class="form-group">
+                <select asp-for="GuitarBrandId">
+                    <option value="">...выберите из списка...</option>
+                    @foreach(GuitarBrand entity in ViewBag.GuitarBrands)
+                    {
+                        <option value="@entity.Id">@entity.BrandName</option>
+                    }
+                </select>
+                <span asp-validation-for="GuitarBrandId"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="GuitarModel"></label>
+                <input asp-for="GuitarModel" />
+                <span asp-validation-for="GuitarModel"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="GuitarType"></label>
+                <select asp-for="GuitarType" asp-items="Html.GetEnumSelectList<GuitarTypeEnum>()"></select>
+                <span asp-validation-for="GuitarType"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="GuitarYear"></label>
+                <input asp-for="GuitarYear" />
+                <span asp-validation-for="GuitarYear"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="GuitarPrice"></label>
+                <input asp-for="GuitarPrice" />
+                <span asp-validation-for="GuitarPrice"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Photo"></label>
+                <input type="file" name="titleImageFile" id="titleImageFile" accept=".jpg,.jpeg,.png" />
+                @if (@Model.Photo != null)
+                {
+                    <div>
+                        <img class="img-block" src="~/img/@Model.Photo"/>
+                    </div>
+                }
+            </div>
+
+            <button type="submit" value="Сохранить">Сохранить</button>
+        </form>
+
+    </div>
+</main>

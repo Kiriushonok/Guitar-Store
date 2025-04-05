@@ -6,6 +6,7 @@ namespace GuitarStore.Domain.Entities
     public class Guitar : EntityBase
     {
         [Display(Name = "Тип гитары")]
+        [Required(ErrorMessage = "Тип гитары не выбран")]
         public GuitarTypeEnum GuitarType { get; set; }
 
         [Display(Name = "Титульная картинка")]
@@ -13,16 +14,19 @@ namespace GuitarStore.Domain.Entities
         public string? Photo { get; set; }
 
         [Display(Name = "Бренд гитары")]
+        [Required(ErrorMessage = "Бренд гитары не выбран")]
         public int GuitarBrandId { get; set; }
         public GuitarBrand? GuitarBrand { get; set; }
 
+        [Required(ErrorMessage = "Модель гитары не указана")]
         [Display(Name = "Модель гитары")]
         [MaxLength(50)]
         public string? GuitarModel { get; set; }
 
         [Display(Name = "Год выпуска")]
-        public int? GuitarYear { get; set; }
+        public int GuitarYear { get; set; }
 
+        [Required(ErrorMessage = "Цена гитары не указана")]
         [Display(Name = "Цена гитары")]
         public double GuitarPrice { get; set; }
     }

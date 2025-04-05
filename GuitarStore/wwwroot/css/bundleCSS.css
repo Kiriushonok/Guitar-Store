@@ -23,6 +23,13 @@ main {
 .div-box {
     width: 400px;
     margin-inline: auto;
+    margin-bottom: 40px;
+}
+
+.img-block {
+    display: block;
+    max-width: 100%;
+    margin-top: 20px;
 }
 
 header {

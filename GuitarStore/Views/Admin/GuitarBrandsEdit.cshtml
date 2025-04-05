@@ -1,0 +1,24 @@
+﻿@model GuitarBrand
+@{
+    string strTitle = "Редактировать запись";
+    ViewBag.Title = strTitle;
+}
+
+<main>
+    <div class="form-container">
+        <h2>@strTitle</h2>
+        <form asp-area="" asp-controller="Admin" asp-action="GuitarBrandsEdit" method="post">
+            <input type="hidden" asp-for="Id"/>
+            <input type="hidden" asp-for="DateCreated" />
+
+            <div asp-validation-summary="All"></div>
+            <div class="form-group">
+                <label asp-for="BrandName"></label>
+                <input asp-for="BrandName" />
+                <span asp-validation-for="BrandName"></span>
+            </div>
+
+            <button type="submit" value="Сохранить">Сохранить</button>
+        </form>
+    </div>
+</main>
