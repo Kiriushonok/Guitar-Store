@@ -2,17 +2,16 @@
     <nav>
         <img src="~/icons/guitar-logo.jpg" alt="Logo" class="our-logo" />
         <ul>
-            <li class="nav-item"><a href="index.html">Главная</a></li>
-            <li class="nav-item"><a href="catalog.html">Каталог</a></li>
-            <li class="nav-item">
-                <a href="recommendations.html">Советы начинающим</a>
-            </li>
-            <li class="nav-item">
-                <a href="addGuitar.html">Добавить гитару</a>
-            </li>
-            <li class="nav-item">
-                <a href="contacts.html">Контакты</a>
-            </li>
+            <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Index">Главная</a></li>
+            <li class="nav-item"><a asp-area="" asp-controller="Guitars" asp-action="Index">Каталог</a></li>
+            <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Advices">Советы начинающим</a></li>
+            @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("admin"))
+            {
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Index">Добавить гитару</a>
+                </li>
+            }
+            <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Contacts">Контакты</a></li>
         </ul>
     </nav>
 </header>

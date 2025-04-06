@@ -2,8 +2,8 @@
 {
     public enum GuitarTypeEnum
     {
-        Acoustic,
-        Bass,
-        Electric
+        Акустическая,
+        Бас,
+        Электрическая
     }
 }

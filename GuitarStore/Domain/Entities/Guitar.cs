@@ -9,9 +9,8 @@ namespace GuitarStore.Domain.Entities
         [Required(ErrorMessage = "Тип гитары не выбран")]
         public GuitarTypeEnum GuitarType { get; set; }
 
-        [Display(Name = "Титульная картинка")]
-        [MaxLength(300)]
-        public string? Photo { get; set; }
+        [Display(Name = "Список картинок гитары")]
+        public ICollection<GuitarImage>? Images { get; set; }
 
         [Display(Name = "Бренд гитары")]
         [Required(ErrorMessage = "Бренд гитары не выбран")]

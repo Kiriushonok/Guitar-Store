@@ -6,7 +6,7 @@ namespace GuitarStore.Infrastructure
     public static class HelperDTO
     {
         // Guitar => GuitarDTO
-        public static GuitarDTO TransformService(Guitar entity)
+        public static GuitarDTO TransformGuitar(Guitar entity)
         {
             GuitarDTO entityDTO = new GuitarDTO();
             entityDTO.Id = entity.Id;
@@ -15,9 +15,20 @@ namespace GuitarStore.Infrastructure
             entityDTO.GuitarType = entity.GuitarType.ToString();
             entityDTO.GuitarYear = entity.GuitarYear;
             entityDTO.GuitarPrice = entity.GuitarPrice;
-            entityDTO.GuitarPhotoFileName = entity.Photo;
+            entityDTO.GuitarImageFileNames = entity.Images?.Select(img => img.FileName).ToList();
+
 
             return entityDTO;
+        }
+
+        public static IEnumerable<GuitarDTO> TransformGuitars(IEnumerable<Guitar> entities) {
+            List<GuitarDTO> entityesDTO = new List<GuitarDTO>();
+
+            foreach(Guitar entity in entities) {
+                entityesDTO.Add(TransformGuitar(entity));
+            }
+
+            return entityesDTO;
         }
     }
 }

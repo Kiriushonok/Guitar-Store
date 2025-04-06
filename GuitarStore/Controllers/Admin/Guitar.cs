@@ -14,7 +14,7 @@ namespace GuitarStore.Controllers.Admin
         }
 
         [HttpPost]
-        public async Task<IActionResult> GuitarsEdit(Guitar entity, IFormFile titleImageFile)
+        public async Task<IActionResult> GuitarsEdit(Guitar entity, List<IFormFile> images)
         {
             if (!ModelState.IsValid) 
             { 
@@ -22,10 +22,23 @@ namespace GuitarStore.Controllers.Admin
                 return View(entity);
             }
 
-            if (titleImageFile != null) 
+            if (images.Any()) 
             {
-                entity.Photo = titleImageFile.FileName;
-                await SaveImg(titleImageFile);
+                foreach(var image in images) {
+
+                    var fileName = Path.GetFileName(image.FileName);
+                    await SaveImg(image);
+                    
+                    var guitarImage = new GuitarImage
+                    {
+                        FileName = fileName,
+                        Guitar = entity
+                    };
+
+                    entity.Images?.Add(guitarImage); // добавляем в навигационное свойство
+
+                }
+
             }
 
             await _dataManager.Guitars.SaveGuitarAsync(entity);

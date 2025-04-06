@@ -1,0 +1,88 @@
+﻿@model GuitarDTO
+@{
+    string? strTitle = Model.GuitarBrand + " " + Model.GuitarBrand;
+    ViewBag.Title = strTitle;
+}
+
+<main class="guitar-main">
+    <h1 class="brand-title">@Model.GuitarBrand @Model.GuitarModel</h1>
+
+    <div class="guitar-overview">
+        @if (Model.GuitarImageFileNames != null && Model.GuitarImageFileNames.Any())
+        {
+            <div class="guitar-image-container">
+                <div class="carousel">
+                    <button class="carousel-btn prev-btn">&#10094;</button>
+                    <div class="carousel-images">
+                        @foreach (var fileName in Model.GuitarImageFileNames)
+                        {
+                            <img src="~/img/@fileName"
+                                 alt="@Model.GuitarBrand @Model.GuitarModel"
+                                 class="guitar-image" />
+                        }
+                    </div>
+                    <button class="carousel-btn next-btn">&#10095;</button>
+                </div>
+            </div>
+        }
+        <div class="guitar-details">
+            <h2 class="guitar-section-title">Обзор @Model.GuitarBrand @Model.GuitarModel</h2>
+            <p class="guitar-description">
+                @Model.GuitarBrand @Model.GuitarModel — это отличная @Model.GuitarType?.ToLower() гитара, идеально подходящая как для новичков, так и для опытных музыкантов.
+                Известная своим качеством и доступной ценой, эта модель отличается прочным корпусом и замечательным звуком.
+                Гитара имеет широкий диапазон, ясный и теплый тон, что делает её отличным выбором для игры в различных стилях — от
+                фолка до рока. Она будет отличным выбором для домашнего использования или концертов.
+                @Model.GuitarBrand @Model.GuitarModel сочетает в себе выдающиеся технические характеристики и элегантный дизайн.
+            </p>
+            <ul class="guitar-specs">
+                <li><strong>Тип гитары: </strong>@Model.GuitarType</li>
+                <li><strong>Цена: </strong>@Model.GuitarPrice ₽</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="guitar-features">
+        <h2 class="guitar-section-title">Особенности @Model.GuitarBrand @Model.GuitarModel</h2>
+        <div class="features-grid">
+            <div class="feature-item">
+                <h3 class="feature-title">Дизайн</h3>
+                <p class="feature-text">Классический стиль с декоративной отделкой и комфортной формой корпуса для длительных занятий.</p>
+            </div>
+            <div class="feature-item">
+                <h3 class="feature-title">Звук</h3>
+                <p class="feature-text">Ясный, глубокий и теплый звук, идеален для начинающих и для занятий в любых условиях.</p>
+            </div>
+            <div class="feature-item">
+                <h3 class="feature-title">Комфорт</h3>
+                <p class="feature-text">Простой в использовании, легкий корпус и удобная грифа, обеспечивающая комфорт при игре.</p>
+            </div>
+            <div class="feature-item">
+                <h3 class="feature-title">Надежность</h3>
+                <p class="feature-text">Прочные материалы и качественная сборка, которые гарантируют долговечность инструмента.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="guitar-contact">
+        <p class="guitar-section-title">Связаться с нами</p>
+        <p class="contact-text">
+            Есть вопросы или хотите заказать @Model.GuitarBrand @Model.GuitarModel? Позвоните нам по телефону
+            <a href="tel:+78001234567">+7 (800) 123-45-67</a>
+            или заполните форму ниже.
+        </p>
+        <form class="contact-form">
+            <input type="text"
+                   name="name"
+                   placeholder="Ваше имя"
+                   class="form-input" />
+            <input type="email"
+                   name="email"
+                   placeholder="Ваш email"
+                   class="form-input" />
+            <textarea name="message"
+                      placeholder="Ваше сообщение"
+                      class="form-textarea"></textarea>
+            <button type="submit" class="form-button">Отправить</button>
+        </form>
+    </div>
+</main>

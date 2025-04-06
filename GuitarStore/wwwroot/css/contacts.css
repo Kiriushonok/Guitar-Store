@@ -1,10 +1,10 @@
 /* Основные стили для страницы */
-body {
-  font-family: Arial, sans-serif;
-  line-height: 1.6;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
+.contact-info {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
 }
 
 /* Контейнер для информации */
@@ -26,21 +26,21 @@ h2, h3 {
   font-size: 24px;
 }
 
-h2 {
-  font-size: 28px;
-  margin-top: 40px;
+.contact-info h2 {
+    font-size: 28px;
+    margin-top: 40px;
 }
 
-.label {
-  color: #333;
-  margin-bottom: 20px;
-  font-size: 24px;
+.contact-info .label {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px;
 }
 /* Параграфы */
-p {
-  color: #555;
-  font-size: 16px;
-  margin-bottom: 20px;
+.contact-info p {
+    color: #555;
+    font-size: 16px;
+    margin-bottom: 20px;
 }
 
 /* Блоки с магазинами */

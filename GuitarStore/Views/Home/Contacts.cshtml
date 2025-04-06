@@ -1,0 +1,112 @@
+﻿@inject IConfiguration configuration
+@{
+    AppConfig? appConfig = configuration.GetSection("Project").Get<AppConfig>();
+    string strTitle = "Контакты";
+    ViewBag.Title = strTitle;
+}
+
+<main>
+    <section class="contact-info">
+
+        <div class="store-info">
+            <h2>Магазины @appConfig?.Company?.CompanyName </h2>
+            <div class="store-location">
+                <div class="store-description">
+                    <h3>@appConfig?.Company?.CompanyName в Москве</h3>
+                    <p>
+                        Наш главный магазин находится в центре Москвы.
+                        Здесь вы можете не только приобрести новые
+                        инструменты, но и воспользоваться услугами по
+                        настройке и ремонту гитар. В нашем магазине
+                        всегда в наличии модели от ведущих брендов,
+                        таких как Yamaha, Gibson, Fender и многих
+                        других.
+                    </p>
+                    <img src="~/img/moscow-store.jpg"
+                         alt="Магазин в Москве"
+                         class="store-image" />
+                </div>
+                <div class="store-description">
+                    <h3>@appConfig?.Company?.CompanyName в Питере</h3>
+                    <p>
+                        В Санкт-Петербурге мы открыли еще один магазин,
+                        который стал любимым местом для поклонников
+                        гитары и музыкальных новинок. Также здесь
+                        работают профессиональные мастера, которые
+                        проводят бесплатные консультации по выбору гитар
+                        и ремонту.
+                    </p>
+                    <img src="~/img/spb-store.jpg"
+                         alt="Магазин в Санкт-Петербурге"
+                         class="store-image" />
+                </div>
+                <div class="store-description">
+                    <h3>@appConfig?.Company?.CompanyName в Самаре</h3>
+                    <p>
+                        Самарский филиал магазина — это идеальное место
+                        для тех, кто ищет качественные гитары по
+                        доступным ценам. Наши консультанты помогут вам
+                        выбрать инструмент, который станет надежным
+                        спутником в вашем музыкальном пути. Для студентов Самарского Университета - скидки!
+                    </p>
+                    <img src="~/img/samara-store.jpg"
+                         alt="Магазин в Самаре"
+                         class="store-image" />
+                </div>
+            </div>
+        </div>
+
+        <p class="label">Как нас найти</p>
+        <p>
+            Наши магазины расположены в центре каждого города. Мы
+            приглашаем вас посетить наши магазины для получения
+            консультации, покупки инструментов или обслуживания вашей
+            гитары. Ниже вы можете найти наши адреса, а также карту,
+            которая поможет вам легче найти наш магазин.
+        </p>
+
+        <div class="map">
+            <p class="label">Посетите нас на карте:</p>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2244.477344114756!2d37.6172995500489!3d55.75582660000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x414ab6f63fefc2ad%3A0x2208ad1f8e2e8d28!2z0JrQsNC90LDRhtC40L8g0L_Rg9C-0L3QuNC90L3Qs9C90YvQuSDQsNGA0L7Qu9Cw0L3QuNC10LvQvtCy0L_RgdC60LjRhtCw0Lgg0J_Rg9C90YvQuNC10Lsg0KHRgtC10YDRgtCw0LnQ!5e0!3m2!1sru!2sru!4v1638235934367!5m2!1sru!2sru"
+                    width="600"
+                    height="450"
+                    style="border: 0"
+                    allowfullscreen=""
+                    loading="lazy"></iframe>
+        </div>
+
+        <p class="label">Обратная связь</p>
+        <p>
+            Если у вас есть вопросы, пожелания или предложения,
+            пожалуйста, не стесняйтесь отправить нам сообщение. Мы ценим
+            мнение наших клиентов и всегда рады помочь!
+        </p>
+
+        <form class="feedback-form">
+            <div class="form-group">
+                <label for="name">Ваше имя:</label>
+                <input type="text"
+                       id="name"
+                       name="name"
+                       placeholder="Введите ваше имя"
+                       required />
+            </div>
+            <div class="form-group">
+                <label for="email">Ваш email:</label>
+                <input type="email"
+                       id="email"
+                       name="email"
+                       placeholder="example@mail.com"
+                       required />
+            </div>
+            <div class="form-group">
+                <label for="message">Ваше сообщение:</label>
+                <textarea id="message"
+                          name="message"
+                          placeholder="Напишите ваше сообщение"
+                          required></textarea>
+            </div>
+            <button type="submit">Отправить</button>
+        </form>
+    </section>
+</main>
