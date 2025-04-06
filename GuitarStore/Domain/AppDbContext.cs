@@ -12,6 +12,7 @@ namespace GuitarStore.Domain
         private readonly IConfiguration _configuration;
         public DbSet<GuitarBrand> GuitarBrands { get; set; } = null!;
         public DbSet<Guitar> Guitars { get; set; } = null!;
+        public DbSet<GuitarImage> GuitarImages { get; set; } = null!;
 
         public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration) : base(options) {
 

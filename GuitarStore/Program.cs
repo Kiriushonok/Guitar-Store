@@ -14,7 +14,7 @@ namespace GuitarStore
         public static async Task Main(string[] args)
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-
+            
             // Подключаем в конфигурацию файл appsettings.json
             IConfigurationBuilder configurationBuilder = new ConfigurationBuilder()
                 .SetBasePath(builder.Environment.ContentRootPath)

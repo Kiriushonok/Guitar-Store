@@ -21,18 +21,39 @@ namespace GuitarStore.Domain.Repositories.EntityFramework
 
         public async Task<Guitar?> GetGuitarByIdAsync(int id)
         {
-            return await _appDbContext.Guitars.Include(x => x.GuitarBrand).FirstOrDefaultAsync(x => x.Id == id);
+            return await _appDbContext.Guitars.Include(x => x.GuitarBrand).Include(g => g.Images).FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<IEnumerable<Guitar>> GetGuitarsAsync()
         {
-            return await _appDbContext.Guitars.Include(x => x.GuitarBrand).ToListAsync();
+            return await _appDbContext.Guitars.Include(x => x.GuitarBrand).Include(g => g.Images).ToListAsync();
         }
 
         public async Task SaveGuitarAsync(Guitar guitar)
         {
-            _appDbContext.Entry(guitar).State = guitar.Id == default ? EntityState.Added : EntityState.Modified;
+            if (guitar.Id == 0)
+            {
+                _appDbContext.Guitars.Add(guitar);
+            }
+            else
+            {
+                _appDbContext.Guitars.Update(guitar);
+
+                // Обрабатываем изображения (если есть новые)
+                if (guitar.Images != null && guitar.Images.Any())
+                {
+                    foreach (var image in guitar.Images)
+                    {
+                        if (image.Id == 0)
+                        {
+                            _appDbContext.GuitarImages.Add(image);
+                        }
+                    }
+                }
+            }
+
             await _appDbContext.SaveChangesAsync();
         }
+
     }
 }

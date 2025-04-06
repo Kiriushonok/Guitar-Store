@@ -17,7 +17,6 @@ namespace GuitarStore.Infrastructure
             entityDTO.GuitarPrice = entity.GuitarPrice;
             entityDTO.GuitarImageFileNames = entity.Images?.Select(img => img.FileName).ToList();
 
-
             return entityDTO;
         }
 

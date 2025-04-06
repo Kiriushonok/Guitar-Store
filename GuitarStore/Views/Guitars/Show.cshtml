@@ -16,9 +16,11 @@
                     <div class="carousel-images">
                         @foreach (var fileName in Model.GuitarImageFileNames)
                         {
-                            <img src="~/img/@fileName"
-                                 alt="@Model.GuitarBrand @Model.GuitarModel"
-                                 class="guitar-image" />
+                            <div class="carousel-slide">
+                                <img src="~/img/@fileName"
+                                     alt="@Model.GuitarBrand @Model.GuitarModel"
+                                     class="guitar-image" />
+                            </div>
                         }
                     </div>
                     <button class="carousel-btn next-btn">&#10095;</button>
