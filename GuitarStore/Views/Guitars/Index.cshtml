@@ -45,9 +45,24 @@
             </select>
 
 
-            <button type="submit">Применить фильтры</button>
+            <button type="submit" class="apply-filters-button">Применить фильтры</button>
+            <button type="button" id="reset-filters" class="reset-filters-button">Сбросить фильтры</button>
         </form>
     </aside>
+
+    <div class="catalog-header">
+        <p id="guitar-count">Найдено гитар: 0</p>
+
+        <div class="page-size-selector">
+            <label for="page-size-select">Товаров на странице:</label>
+            <select id="page-size-select">
+                <option value="6">6</option>
+                <option value="9">9</option>
+                <option value="12">12</option>
+                <option value="15">15</option>
+            </select>
+        </div>
+    </div>
 
 
     <div id="catalog-container" class="catalog-products">

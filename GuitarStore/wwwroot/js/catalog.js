@@ -7,10 +7,14 @@
     const pageIndicator = document.querySelector(".pagination");
     const priceMinInput = document.getElementById("priceMin");
     const priceMaxInput = document.getElementById("priceMax");
+    const guitarCountDisplay = document.getElementById("guitar-count");
+    const resetFiltersBtn = document.getElementById("reset-filters");
+    const pageSizeSelect = document.getElementById("page-size-select");
 
-    // Можно вставить это куда-то в HTML или динамически создать
+
     const priceWarning = document.createElement("p");
     priceWarning.style.color = "red";
+    priceWarning.style.marginTop = "0px";
     priceWarning.style.display = "none";
     priceWarning.textContent = "Минимальная цена не может быть больше максимальной!";
     form.insertBefore(priceWarning, form.querySelector("button, input[type='submit']")); // вставим перед кнопкой
@@ -34,7 +38,20 @@
 
 
     let currentPage = 1;
-    const pageSize = 1;
+    let pageSize = parseInt(pageSizeSelect.value);
+
+    pageSizeSelect.addEventListener("change", () => {
+        pageSize = parseInt(pageSizeSelect.value);
+        currentPage = 1;
+        fetchGuitars();
+    });
+
+    resetFiltersBtn.addEventListener("click", () => {
+        form.reset();
+        currentPage = 1;
+        fetchGuitars();
+        validatePriceInputs();
+    });
 
     async function fetchGuitars() {
         const params = new URLSearchParams(new FormData(form));
@@ -44,9 +61,10 @@
         const response = await fetch(`/Guitars/GetFilteredGuitars?${params.toString()}`);
         const data = await response.json();
 
+        guitarCountDisplay.textContent = `Найдено гитар: ${data.totalItems}`;
         renderGuitars(data.items);
         updatePagination(data.totalPages);
-        updatePricePlaceholders(data.minPrice, data.maxPrice); // 👈 добавили
+        updatePricePlaceholders(data.minPrice, data.maxPrice);
     }
 
     function updatePricePlaceholders(min, max) {

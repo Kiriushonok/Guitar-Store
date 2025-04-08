@@ -92,7 +92,8 @@ namespace GuitarStore.Controllers
                 items = HelperDTO.TransformGuitars(guitars),
                 totalPages,
                 minPrice,
-                maxPrice
+                maxPrice,
+                totalItems
             };
 
             return Json(result);
