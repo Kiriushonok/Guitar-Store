@@ -76,23 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
             guitar.element.style.display = (matchesType && matchesPrice && matchesBrand) ? "block" : "none";
         });
     });
-    
-    
-
-    // Add hover effects for product cards
-    document.querySelectorAll('.product-card-box').forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'scale(1.05)'; // Increase card size
-            this.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.2)'; // Add shadow
-            this.style.backgroundColor = 'rgba(0, 0, 0, 0.05)'; // Darken background slightly
-        });
-
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'scale(1)'; // Reset card size
-            this.style.boxShadow = ''; // Remove shadow
-            this.style.backgroundColor = ''; // Reset background color
-        });
-    });
 
     // Back to Top Button Logic
     const backToTopButton = document.getElementById("back-to-top");

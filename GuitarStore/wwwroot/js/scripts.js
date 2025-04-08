@@ -76,23 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
             guitar.element.style.display = (matchesType && matchesPrice && matchesBrand) ? "block" : "none";
         });
     });
-    
-    
-
-    // Add hover effects for product cards
-    document.querySelectorAll('.product-card-box').forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'scale(1.05)'; // Increase card size
-            this.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.2)'; // Add shadow
-            this.style.backgroundColor = 'rgba(0, 0, 0, 0.05)'; // Darken background slightly
-        });
-
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'scale(1)'; // Reset card size
-            this.style.boxShadow = ''; // Remove shadow
-            this.style.backgroundColor = ''; // Reset background color
-        });
-    });
 
     // Back to Top Button Logic
     const backToTopButton = document.getElementById("back-to-top");
@@ -178,25 +161,231 @@ document.getElementById("service-form").addEventListener("submit", function (e) 
 document.addEventListener("DOMContentLoaded", () => {
     const prevBtn = document.querySelector(".prev-btn");
     const nextBtn = document.querySelector(".next-btn");
-    const carouselImages = document.querySelector(".carousel-images");
-    const images = document.querySelectorAll(".guitar-image");
+    const carouselImage = document.getElementById("carousel-image");
+    const carouselWrapper = document.querySelector(".carousel-images");
+
+    const dots = document.querySelectorAll(".carousel-dot");
+
+    function updateDots(index) {
+        dots.forEach(dot => dot.classList.remove("active"));
+        if (dots[index]) {
+            dots[index].classList.add("active");
+        }
+    }
+
+    dots.forEach(dot => {
+        dot.addEventListener("click", (e) => {
+            const index = parseInt(e.target.dataset.index);
+            if (index !== currentIndex) {
+                loadImage(index);
+            }
+        });
+    });
+
+
+    const totalImages = parseInt(carouselWrapper.dataset.total);
+    const guitarId = carouselWrapper.dataset.guitarId;
 
     let currentIndex = 0;
 
-    function updateCarousel() {
-        const offset = -currentIndex * 100;
-        carouselImages.style.transform = `translateX(${offset}%)`;
+    // ���������� ������ ������ ���� ������ ����� ��������
+    if (totalImages > 1) {
+        prevBtn.style.display = "block";
+        nextBtn.style.display = "block";
+    }
+
+    function fadeOut(element) {
+        element.classList.remove("active");
+    }
+
+    function fadeIn(element) {
+        element.classList.add("active");
+    }
+
+    function loadImage(index) {
+        fetch(`/Guitars/GetGuitarImage?guitarId=${guitarId}&index=${index}`)
+            .then(res => {
+                if (!res.ok) throw new Error("Image not found");
+                return res.json();
+            })
+            .then(data => {
+                fadeOut(carouselImage);
+
+                // ������ ����� �����������
+                setTimeout(() => {
+                    carouselImage.src = data.imageUrl;
+                    currentIndex = index;
+                    fadeIn(carouselImage);
+                    updateDots(index); // ��������� �������� �����
+                }, 250);
+            })
+            .catch(err => console.error("������ ��� �������� �����������:", err));
     }
 
     nextBtn.addEventListener("click", () => {
-        currentIndex = (currentIndex + 1) % images.length;
-        updateCarousel();
+        const nextIndex = (currentIndex + 1) % totalImages;
+        loadImage(nextIndex);
     });
 
     prevBtn.addEventListener("click", () => {
-        currentIndex = (currentIndex - 1 + images.length) % images.length;
-        updateCarousel();
+        const prevIndex = (currentIndex - 1 + totalImages) % totalImages;
+        loadImage(prevIndex);
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("filter-form");
+    const catalogContainer = document.getElementById("catalog-container");
+    const prevPageBtn = document.getElementById("prev-page-btn");
+    const nextPageBtn = document.getElementById("next-page-btn");
+    const currentPageSpan = document.getElementById("current-page");
+    const pageIndicator = document.querySelector(".pagination");
+    const priceMinInput = document.getElementById("priceMin");
+    const priceMaxInput = document.getElementById("priceMax");
+
+    // Можно вставить это куда-то в HTML или динамически создать
+    const priceWarning = document.createElement("p");
+    priceWarning.style.color = "red";
+    priceWarning.style.display = "none";
+    priceWarning.textContent = "Минимальная цена не может быть больше максимальной!";
+    form.insertBefore(priceWarning, form.querySelector("button, input[type='submit']")); // вставим перед кнопкой
+
+    function validatePriceInputs() {
+        const min = parseFloat(priceMinInput.value);
+        const max = parseFloat(priceMaxInput.value);
+
+        if (!isNaN(min) && !isNaN(max) && min > max) {
+            priceWarning.style.display = "block";
+            return false;
+        } else {
+            priceWarning.style.display = "none";
+            return true;
+        }
+    }
+
+    priceMinInput.addEventListener("input", validatePriceInputs);
+    priceMaxInput.addEventListener("input", validatePriceInputs);
+
+
+
+    let currentPage = 1;
+    const pageSize = 1;
+
+    async function fetchGuitars() {
+        const params = new URLSearchParams(new FormData(form));
+        params.append("page", currentPage);
+        params.append("pageSize", pageSize);
+
+        const response = await fetch(`/Guitars/GetFilteredGuitars?${params.toString()}`);
+        const data = await response.json();
+
+        renderGuitars(data.items);
+        updatePagination(data.totalPages);
+        updatePricePlaceholders(data.minPrice, data.maxPrice); // 👈 добавили
+    }
+
+    function updatePricePlaceholders(min, max) {
+        const priceMinInput = document.getElementById("priceMin");
+        const priceMaxInput = document.getElementById("priceMax");
+
+        priceMinInput.placeholder = `от ${min}`;
+        priceMaxInput.placeholder = `до ${max}`;
+    }
+
+
+    catalogContainer.addEventListener("mouseover", function (event) {
+        const card = event.target.closest(".product-card-box");
+        if (card) {
+            card.style.transform = "scale(1.05)";
+            card.style.boxShadow = "0 6px 20px rgba(0, 0, 0, 0.2)";
+            card.style.backgroundColor = "rgba(0, 0, 0, 0.05)";
+        }
     });
 
-    updateCarousel();
+    catalogContainer.addEventListener("mouseout", function (event) {
+        const card = event.target.closest(".product-card-box");
+        if (card) {
+            card.style.transform = "scale(1)";
+            card.style.boxShadow = "";
+            card.style.backgroundColor = "";
+        }
+    });
+
+    function renderGuitars(guitars) {
+        catalogContainer.innerHTML = "";
+
+        if (guitars.length === 0) {
+            catalogContainer.innerHTML = "<p>Ничего не найдено.</p>";
+            return;
+        }
+
+        guitars.forEach(guitar => {
+            const card = document.createElement("a");
+            card.href = `/Guitars/Show/${guitar.id}`;
+            card.className = "product-card-box";
+
+            card.innerHTML = `
+            <img src="/img/${guitar.guitarImageFileNames?.[0]}"
+                 alt="${guitar.guitarBrand} ${guitar.guitarModel}" class="product-card-image" />
+            <div class="product-card-info">
+                <div>${guitar.guitarBrand} ${guitar.guitarModel}</div>
+                <strong>${guitar.guitarPrice.toLocaleString()} ₽</strong>
+                <p>Тип: ${guitar.guitarType}</p>
+                <p>Бренд: ${guitar.guitarBrand}</p>
+            </div>
+        `;
+
+            catalogContainer.appendChild(card);
+        });
+    }
+
+
+    function updatePagination(totalPages) {
+        if (totalPages <= 1) {
+            pageIndicator.style.display = "none";
+        } else {
+            pageIndicator.style.display = "flex";
+            currentPageSpan.textContent = currentPage;
+            prevPageBtn.disabled = currentPage === 1;
+            nextPageBtn.disabled = currentPage === totalPages;
+
+            prevPageBtn.onclick = () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    fetchGuitars();
+                }
+            };
+
+            nextPageBtn.onclick = () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    fetchGuitars();
+                }
+            };
+        }
+    }
+
+    form.addEventListener("submit", e => {
+        e.preventDefault();
+        if (!validatePriceInputs()) return;
+
+        currentPage = 1;
+        fetchGuitars();
+    });
+
+
+
+    const backToTopButton = document.getElementById("back-to-top");
+    if (backToTopButton) {
+        window.addEventListener("scroll", () => {
+            backToTopButton.style.display = window.scrollY > 300 ? "block" : "none";
+        });
+
+        backToTopButton.addEventListener("click", () => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+    }
+
+    // Начальная загрузка
+    fetchGuitars();
 });

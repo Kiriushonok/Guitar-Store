@@ -8,6 +8,6 @@
     @await Html.PartialAsync("_HeaderPartial")
     @RenderBody()
     @await Html.PartialAsync("_FooterPartial")
-    @await Html.PartialAsync("_ScriptsPartial")
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

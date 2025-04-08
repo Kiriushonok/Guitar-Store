@@ -8,5 +8,7 @@ namespace GuitarStore.Domain.Repositories.Abstract
         Task<Guitar?> GetGuitarByIdAsync(int id);
         Task SaveGuitarAsync(Guitar guitar);
         Task DeleteGuitarAsync(int id);
+
+        IQueryable<Guitar> GetQueryable();
     }
 }

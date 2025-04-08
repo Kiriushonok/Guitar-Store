@@ -8,56 +8,61 @@
     <aside class="filters">
         <form id="filter-form">
             <p>Поиск</p>
-            <input type="text" id="price-min" name="price-min" placeholder="Поиск гитары" min="0" style="margin-bottom: 0px;">
+            <input type="text" id="search-input" name="search" placeholder="Поиск по бренду или модели" style="margin-bottom: 10px;">
+
 
             <p>Фильтры</p>
 
             <label for="guitar-type">Тип гитары:</label>
-            <select id="guitar-type" name="guitar-type">
+            <select id="guitar-type" name="type">
                 <option value="">Все типы</option>
-                <option value="acoustic">Акустическая</option>
-                <option value="electric">Электрическая</option>
-                <option value="bass">Бас-гитара</option>
+                @foreach (var type in Enum.GetValues(typeof(GuitarStore.Domain.Enums.GuitarTypeEnum)))
+                {
+                    <option value="@type">@type</option>
+                }
             </select>
 
-            <label for="price-min">Цена от (₽):</label>
-            <input type="number" id="price-min" name="price-min" placeholder="Минимум" min="0">
+            <label for="priceMin">Цена от (₽):</label>
+            <input type="number" id="priceMin" name="priceMin" placeholder="от" min="0">
 
-            <label for="price-max">Цена до (₽):</label>
-            <input type="number" id="price-max" name="price-max" placeholder="Максимум" min="0">
+            <label for="priceMax">Цена до (₽):</label>
+            <input type="number" id="priceMax" name="priceMax" placeholder="до" min="0">
 
             <label for="brand">Бренд:</label>
             <select id="brand" name="brand">
                 <option value="">Все бренды</option>
-                <option value="fender">Fender</option>
-                <option value="gibson">Gibson</option>
-                <option value="yamaha">Yamaha</option>
-                <option value="ibanez">Ibanez</option>
+
+                @{
+                    var brands = ViewBag.Brands as IEnumerable<GuitarStore.Domain.Entities.GuitarBrand>;
+                    if (brands != null && brands.Any())
+                    {
+                        foreach (var brand in brands)
+                        {
+                            <option value="@brand.BrandName?.ToLower()">@brand.BrandName</option>
+                        }
+                    }
+                }
             </select>
+
 
             <button type="submit">Применить фильтры</button>
         </form>
     </aside>
 
 
-    @if (Model.Any())
-    {
-        <div class="catalog-products">
-            @foreach (GuitarDTO entity in Model)
-            {
-                <a asp-area="" asp-controller="Guitars" asp-action="Show" asp-route-id="@entity.Id" class="product-card-box">
-                    <img src="~/img/@(entity.GuitarImageFileNames?.FirstOrDefault())" alt="@entity.GuitarBrand @entity.GuitarModel" class="product-card-image" />
-                    <div class="product-card-info">
-                        <div>@entity.GuitarBrand @entity.GuitarModel</div>
-                        <strong>@entity.GuitarPrice ₽</strong>
-                        <p>Тип: @entity.GuitarType</p>
-                        <p>Бренд: @entity.GuitarBrand</p>
-                    </div>
-                </a>
-            }
-        </div>
-    }
+    <div id="catalog-container" class="catalog-products">
+        <!-- Товары подгружаются сюда -->
+    </div>
 
+    <div class="pagination">
+        <button id="prev-page-btn">Назад</button>
+        <span id="page-indicator">Страница <span id="current-page">1</span></span>
+        <button id="next-page-btn">Вперёд</button>
+    </div>
 
     <button id="back-to-top" class="back-to-top-btn">↑ Наверх</button>
 </main>
+
+@section Scripts {
+    <script src="~/js/catalog.js" asp-append-version="true"></script>
+}

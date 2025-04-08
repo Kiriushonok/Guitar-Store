@@ -13,20 +13,24 @@
             <div class="guitar-image-container">
                 <div class="carousel">
                     <button class="carousel-btn prev-btn">&#10094;</button>
-                    <div class="carousel-images">
-                        @foreach (var fileName in Model.GuitarImageFileNames)
-                        {
-                            <div class="carousel-slide">
-                                <img src="~/img/@fileName"
-                                     alt="@Model.GuitarBrand @Model.GuitarModel"
-                                     class="guitar-image" />
-                            </div>
-                        }
+                    <div class="carousel-image-wrapper" data-total="@Model.GuitarImageFileNames.Count()" data-guitar-id="@Model.Id">
+                        <div class="carousel-images" data-total="@Model.GuitarImageFileNames.Count()" data-guitar-id="@Model.Id">
+                            <img src="~/img/@Model.GuitarImageFileNames.First()" alt="@Model.GuitarBrand @Model.GuitarModel" 
+                            class="guitar-image active" id="carousel-image" />
+                        </div>
                     </div>
                     <button class="carousel-btn next-btn">&#10095;</button>
                 </div>
+                <div class="carousel-indicators">
+                    @for (int i = 0; i < Model.GuitarImageFileNames.Count(); i++)
+                    {
+                        <span class="carousel-dot @(i == 0 ? "active" : "")" data-index="@i"></span>
+                    }
+                </div>
+
             </div>
         }
+
         <div class="guitar-details">
             <h2 class="guitar-section-title">Обзор @Model.GuitarBrand @Model.GuitarModel</h2>
             <p class="guitar-description">
@@ -88,3 +92,5 @@
         </form>
     </div>
 </main>
+
+<script src="~/js/product.js" asp-append-version="true"></script>

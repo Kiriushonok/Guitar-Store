@@ -19,6 +19,13 @@ namespace GuitarStore.Domain.Repositories.EntityFramework
             await _appDbContext.SaveChangesAsync();
         }
 
+        public IQueryable<Guitar> GetQueryable()
+        {
+            return _appDbContext.Guitars
+                .Include(g => g.GuitarBrand)
+                .Include(g => g.Images);
+        }
+
         public async Task<Guitar?> GetGuitarByIdAsync(int id)
         {
             return await _appDbContext.Guitars.Include(x => x.GuitarBrand).Include(g => g.Images).FirstOrDefaultAsync(x => x.Id == id);

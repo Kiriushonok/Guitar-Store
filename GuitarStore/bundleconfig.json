@@ -15,7 +15,14 @@
     "inputFiles": [
       "wwwroot/js/filter.js",
       "wwwroot/js/form.js",
-      "wwwroot/js/product.js"
+      "wwwroot/js/product.js",
+      "wwwroot/js/catalog.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/scripts.min.min.js",
+    "inputFiles": [
+      "wwwroot/js/scripts.min.js"
     ]
   }
 ]
