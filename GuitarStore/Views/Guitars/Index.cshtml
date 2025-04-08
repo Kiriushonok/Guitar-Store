@@ -21,12 +21,28 @@
                     <option value="@type">@type</option>
                 }
             </select>
+            <div class="price-range-container">
+                <label>Диапазон цены (₽):</label>
 
-            <label for="priceMin">Цена от (₽):</label>
-            <input type="number" id="priceMin" name="priceMin" placeholder="от" min="0">
+                <div class="range-labels">
+                    <span id="range-min-label">от 0</span>
+                    <span id="range-max-label">до 100000</span>
+                </div>
 
-            <label for="priceMax">Цена до (₽):</label>
-            <input type="number" id="priceMax" name="priceMax" placeholder="до" min="0">
+                <div class="slider-wrapper">
+                    <input type="range" class="input-with-border" id="price-slider-min" min="0" max="100000" step="500" value="18990">
+                    <input type="range" id="price-slider-max" min="0" max="100000" step="500" value="752990">
+                    <div class="slider-track"></div>
+                </div>
+
+                <div class="input-fields">
+                    <input type="number" id="priceMin" name="priceMin" placeholder="от" min="0">
+                    <input type="number" id="priceMax" name="priceMax" placeholder="до" min="0">
+                </div>
+            </div>
+
+
+
 
             <label for="brand">Бренд:</label>
             <select id="brand" name="brand">

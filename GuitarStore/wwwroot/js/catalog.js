@@ -10,6 +10,84 @@
     const guitarCountDisplay = document.getElementById("guitar-count");
     const resetFiltersBtn = document.getElementById("reset-filters");
     const pageSizeSelect = document.getElementById("page-size-select");
+    const sliderMin = document.getElementById("price-slider-min");
+    const sliderMax = document.getElementById("price-slider-max");
+    const rangeMinLabel = document.getElementById("range-min-label");
+    const rangeMaxLabel = document.getElementById("range-max-label");
+
+    function calculateStep(min, max) {
+        const range = max - min;
+
+        // Сначала возьмём желаемое значение
+        let step = Math.max(1, Math.round(range / 100));
+
+        // Убедимся, что max достижим:
+        while ((range % step) !== 0 && step > 1) {
+            step--;
+        }
+
+        return step;
+    }
+
+    function roundToStep(value, step, base) {
+        const rounded = Math.round((value - base) / step) * step + base;
+        return Math.min(rounded, parseInt(sliderMax.max)); // не превышать max
+    }
+
+
+    function syncSlidersToInputs() {
+        let min = parseInt(sliderMin.value);
+        let max = parseInt(sliderMax.value);
+
+        if (min > max) {
+            min = max;
+            sliderMin.value = min;
+        }
+
+        const step = parseInt(sliderMin.getAttribute("step") || "1");
+        const base = parseInt(sliderMin.min || "0");
+
+        priceMinInput.value = roundToStep(min, step, base);
+        priceMaxInput.value = roundToStep(max, step, base);
+
+        rangeMinLabel.textContent = `от ${priceMinInput.value}`;
+        rangeMaxLabel.textContent = `до ${priceMaxInput.value}`;
+
+        updateSliderTrack();
+    }
+
+    function updateSliderTrack() {
+        const min = parseInt(sliderMin.min);
+        const max = parseInt(sliderMin.max);
+        const valMin = parseInt(sliderMin.value);
+        const valMax = parseInt(sliderMax.value);
+
+        const percentMin = ((valMin - min) / (max - min)) * 100;
+        const percentMax = ((valMax - min) / (max - min)) * 100;
+
+        const track = document.querySelector(".slider-track");
+        track.style.left = `${percentMin}%`;
+        track.style.width = `${percentMax - percentMin}%`;
+    }
+
+
+
+    function syncInputsToSliders() {
+        const min = parseInt(priceMinInput.value);
+        const max = parseInt(priceMaxInput.value);
+
+        if (!isNaN(min)) sliderMin.value = min;
+        if (!isNaN(max)) sliderMax.value = max;
+
+        syncSlidersToInputs();
+    }
+
+    sliderMin.addEventListener("input", syncSlidersToInputs);
+    sliderMax.addEventListener("input", syncSlidersToInputs);
+
+    priceMinInput.addEventListener("input", syncInputsToSliders);
+    priceMaxInput.addEventListener("input", syncInputsToSliders);
+
 
 
     const priceWarning = document.createElement("p");
@@ -68,12 +146,26 @@
     }
 
     function updatePricePlaceholders(min, max) {
-        const priceMinInput = document.getElementById("priceMin");
-        const priceMaxInput = document.getElementById("priceMax");
-
         priceMinInput.placeholder = `от ${min}`;
         priceMaxInput.placeholder = `до ${max}`;
+
+        sliderMin.min = min;
+        sliderMin.max = max;
+        sliderMax.min = min;
+        sliderMax.max = max;
+
+        const step = calculateStep(min, max); // ← СНАЧАЛА step
+        sliderMin.step = step;
+        sliderMax.step = step;
+
+        // Теперь можно безопасно установить value
+        if (!priceMinInput.value) sliderMin.value = min;
+        if (!priceMaxInput.value) sliderMax.value = max;
+
+        syncSlidersToInputs();
     }
+
+
 
 
     catalogContainer.addEventListener("mouseover", function (event) {
@@ -155,8 +247,6 @@
         currentPage = 1;
         fetchGuitars();
     });
-
-
 
     const backToTopButton = document.getElementById("back-to-top");
     if (backToTopButton) {

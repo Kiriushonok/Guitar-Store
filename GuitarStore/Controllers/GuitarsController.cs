@@ -40,7 +40,13 @@ namespace GuitarStore.Controllers
         [HttpGet]
         public async Task<IActionResult> GetFilteredGuitars(string? search, string? type, string? brand, int? priceMin, int? priceMax, int page = 1, int pageSize = 6)
         {
-            var query = _dataManager.Guitars.GetQueryable(); // Предполагаем, что ты можешь получить IQueryable<Guitar>
+            var allGuitarsQuery = _dataManager.Guitars.GetQueryable(); // Для min/max
+
+            var minPrice = await allGuitarsQuery.MinAsync(g => (decimal?)g.GuitarPrice) ?? 0;
+            var maxPrice = await allGuitarsQuery.MaxAsync(g => (decimal?)g.GuitarPrice) ?? 0;
+
+            // Фильтруем уже отдельно
+            var query = allGuitarsQuery;
 
             if (!string.IsNullOrWhiteSpace(search))
             {
@@ -50,12 +56,9 @@ namespace GuitarStore.Controllers
                     g.GuitarBrand!.BrandName!.ToLower().Contains(search));
             }
 
-            if (!string.IsNullOrEmpty(type))
+            if (!string.IsNullOrEmpty(type) && Enum.TryParse<GuitarTypeEnum>(type, out var parsedType))
             {
-                if (Enum.TryParse<GuitarTypeEnum>(type, out var parsedType))
-                {
-                    query = query.Where(g => g.GuitarType == parsedType);
-                }
+                query = query.Where(g => g.GuitarType == parsedType);
             }
 
             if (!string.IsNullOrEmpty(brand))
@@ -84,9 +87,6 @@ namespace GuitarStore.Controllers
                 .Include(g => g.GuitarBrand)
                 .ToListAsync();
 
-            var minPrice = await query.MinAsync(g => (decimal?)g.GuitarPrice) ?? 0;
-            var maxPrice = await query.MaxAsync(g => (decimal?)g.GuitarPrice) ?? 0;
-
             var result = new
             {
                 items = HelperDTO.TransformGuitars(guitars),
@@ -97,8 +97,8 @@ namespace GuitarStore.Controllers
             };
 
             return Json(result);
-
         }
+
 
 
         [HttpGet]
