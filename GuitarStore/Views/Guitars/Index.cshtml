@@ -10,7 +10,6 @@
             <p>Поиск</p>
             <input type="text" id="search-input" name="search" placeholder="Поиск по бренду или модели" style="margin-bottom: 10px;">
 
-
             <p>Фильтры</p>
 
             <label for="guitar-type">Тип гитары:</label>
@@ -25,21 +24,44 @@
                 <label>Диапазон цены (₽):</label>
 
                 <div class="range-labels">
-                    <span id="range-min-label">от 0</span>
-                    <span id="range-max-label">до 100000</span>
+                    <span id="range-min-label">от @ViewBag.MinPrice</span>
+                    <span id="range-max-label">до @ViewBag.MaxPrice</span>
                 </div>
 
                 <div class="slider-wrapper">
-                    <input type="range" class="input-with-border" id="price-slider-min" min="0" max="100000" step="500" value="18990">
-                    <input type="range" id="price-slider-max" min="0" max="100000" step="500" value="752990">
+                    <input type="range"
+                           class="input-with-border"
+                           id="price-slider-min"
+                           min="@ViewBag.MinPrice"
+                           max="@ViewBag.MaxPrice"
+                           step="@(Math.Max(1, (int)((ViewBag.MaxPrice - ViewBag.MinPrice) / 100)))"
+                           value="@ViewBag.MinPrice">
+
+                    <input type="range"
+                           id="price-slider-max"
+                           min="@ViewBag.MinPrice"
+                           max="@ViewBag.MaxPrice"
+                           step="@(Math.Max(1, (int)((ViewBag.MaxPrice - ViewBag.MinPrice) / 100)))"
+                           value="@ViewBag.MaxPrice">
+
                     <div class="slider-track"></div>
                 </div>
 
                 <div class="input-fields">
-                    <input type="number" id="priceMin" name="priceMin" placeholder="от" min="0">
-                    <input type="number" id="priceMax" name="priceMax" placeholder="до" min="0">
+                    <input type="number"
+                           id="priceMin"
+                           name="priceMin"
+                           placeholder="от @ViewBag.MinPrice"
+                           min="@ViewBag.MinPrice">
+
+                    <input type="number"
+                           id="priceMax"
+                           name="priceMax"
+                           placeholder="до @ViewBag.MaxPrice"
+                           max="@ViewBag.MaxPrice">
                 </div>
             </div>
+
 
 
 

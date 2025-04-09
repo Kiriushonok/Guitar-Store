@@ -20,9 +20,18 @@ namespace GuitarStore.Controllers
         {
             var guitars = await _dataManager.Guitars.GetGuitarsAsync();
             var guitarsDTO = HelperDTO.TransformGuitars(guitars);
-            ViewBag.Brands = await _dataManager.GuitarBrands.GetGuitarBrandsAsync(); // ✅ добавили
+
+            var allGuitarsQuery = _dataManager.Guitars.GetQueryable();
+            var minPrice = await allGuitarsQuery.MinAsync(g => (decimal?)g.GuitarPrice) ?? 0;
+            var maxPrice = await allGuitarsQuery.MaxAsync(g => (decimal?)g.GuitarPrice) ?? 0;
+
+            ViewBag.Brands = await _dataManager.GuitarBrands.GetGuitarBrandsAsync();
+            ViewBag.MinPrice = (int)minPrice;
+            ViewBag.MaxPrice = (int)maxPrice;
+
             return View(guitarsDTO);
         }
+
 
         public async Task<IActionResult> Show(int id)
         {
@@ -91,8 +100,6 @@ namespace GuitarStore.Controllers
             {
                 items = HelperDTO.TransformGuitars(guitars),
                 totalPages,
-                minPrice,
-                maxPrice,
                 totalItems
             };
 

@@ -4,6 +4,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const carouselImage = document.getElementById("carousel-image");
     const carouselWrapper = document.querySelector(".carousel-images");
 
+    // Если обёртка карусели отсутствует — выходим из скрипта
+    if (!carouselWrapper) return;
+
     const dots = document.querySelectorAll(".carousel-dot");
 
     function updateDots(index) {
