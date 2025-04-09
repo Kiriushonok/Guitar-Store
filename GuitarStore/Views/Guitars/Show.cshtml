@@ -15,8 +15,8 @@
                     <button class="carousel-btn prev-btn">&#10094;</button>
                     <div class="carousel-image-wrapper" data-total="@Model.GuitarImageFileNames.Count()" data-guitar-id="@Model.Id">
                         <div class="carousel-images" data-total="@Model.GuitarImageFileNames.Count()" data-guitar-id="@Model.Id">
-                            <img src="~/img/@Model.GuitarImageFileNames.First()" alt="@Model.GuitarBrand @Model.GuitarModel" 
-                            class="guitar-image active" id="carousel-image" />
+                            <img src="~/img/@Model.GuitarImageFileNames.First()" alt="@Model.GuitarBrand @Model.GuitarModel"
+                                 class="guitar-image active" id="carousel-image" />
                         </div>
                     </div>
                     <button class="carousel-btn next-btn">&#10095;</button>
@@ -27,9 +27,15 @@
                         <span class="carousel-dot @(i == 0 ? "active" : "")" data-index="@i"></span>
                     }
                 </div>
-
             </div>
         }
+        else
+        {
+            <div class="guitar-image-container">
+                <img src="~/img/noimage_detail.png" alt="Нет фото @Model.GuitarBrand @Model.GuitarModel" class="guitar-image active" />
+            </div>
+        }
+
 
         <div class="guitar-details">
             <h2 class="guitar-section-title">Обзор @Model.GuitarBrand @Model.GuitarModel</h2>

@@ -18,6 +18,67 @@
     const globalMin = parseInt(sliderMin.min);
     const globalMax = parseInt(sliderMax.max);
 
+    const searchInput = document.getElementById("search-input");
+    const liveSearchResults = document.getElementById("live-search-results");
+    let liveSearchTimeout;
+
+    searchInput.addEventListener("input", () => {
+        const query = searchInput.value.trim();
+
+        if (liveSearchTimeout) clearTimeout(liveSearchTimeout);
+
+        if (query.length < 2) {
+            liveSearchResults.style.display = "none";
+            return;
+        }
+
+        liveSearchTimeout = setTimeout(() => {
+            fetch(`/Guitars/LiveSearch?query=${encodeURIComponent(query)}`)
+                .then(res => res.json())
+                .then(results => {
+                    renderLiveSearch(results);
+                })
+                .catch(() => {
+                    liveSearchResults.innerHTML = "<p>Ошибка поиска</p>";
+                    liveSearchResults.style.display = "block";
+                });
+        }, 30);
+    });
+
+    searchInput.addEventListener("focus", () => {
+        const query = searchInput.value.trim();
+
+        if (query.length >= 2) {
+            liveSearchResults.style.display = "block";
+        }
+    });
+
+
+    function renderLiveSearch(results) {
+        if (!results || results.length === 0) {
+            liveSearchResults.innerHTML = "<p>Ничего не найдено</p>";
+            liveSearchResults.style.display = "block";
+            return;
+        }
+
+        liveSearchResults.innerHTML = results.map(g => `
+        <div class="live-search-item" onclick="location.href='/Guitars/Show/${g.id}'">
+            <img src="/img/${g.image && g.image.trim() !== '' ? g.image : 'noimage_detail.png'}" alt="${g.brand} ${g.model}" />
+            <div class="live-search-item-title">${g.brand} ${g.model}</div>
+            <div><strong>${g.price.toLocaleString()} ₽</strong></div>
+        </div>
+    `).join("");
+
+        liveSearchResults.style.display = "block";
+    }
+
+    document.addEventListener("click", (e) => {
+        if (!liveSearchResults.contains(e.target) && !searchInput.contains(e.target)) {
+            liveSearchResults.style.display = "none";
+        }
+    });
+
+
     function calculateStep(min, max) {
         let step = Math.max(1, Math.round((max - min) / 100));
         while ((max - min) % step !== 0 && step > 1) step--;
@@ -206,9 +267,12 @@
             const hasImage = guitar.guitarImageFileNames && guitar.guitarImageFileNames.length > 0;
             const imageHtml = hasImage
                 ? `<img src="/img/${guitar.guitarImageFileNames[0]}" 
-                       alt="${guitar.guitarBrand} ${guitar.guitarModel}" 
-                       class="product-card-image" />`
-                : `<div class="no-image-placeholder">Пока нет фотографий гитары ${guitar.guitarBrand} ${guitar.guitarModel}</div>`;
+             alt="${guitar.guitarBrand} ${guitar.guitarModel}" 
+             class="product-card-image" />`
+                : `<img src="/img/noimage_detail.png" 
+             alt="Нет фото ${guitar.guitarBrand} ${guitar.guitarModel}" 
+             class="product-card-image" />`;
+
 
             card.innerHTML = `
                 ${imageHtml}

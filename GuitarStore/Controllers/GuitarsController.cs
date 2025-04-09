@@ -122,5 +122,36 @@ namespace GuitarStore.Controllers
             return Json(new { imageUrl = imagePath });
         }
 
+        [HttpGet]
+        public async Task<IActionResult> LiveSearch(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+                return Json(new List<object>());
+
+            query = query.ToLower();
+
+            var guitarsQuery = _dataManager.Guitars
+                .GetQueryable()
+                .Include(g => g.GuitarBrand)
+                .Include(g => g.Images);
+
+            var matchedGuitars = await guitarsQuery
+                .Where(g =>
+                    (g.GuitarModel != null && g.GuitarModel.ToLower().Contains(query)) ||
+                    (g.GuitarBrand != null && g.GuitarBrand.BrandName != null && g.GuitarBrand.BrandName.ToLower().Contains(query)))
+                .Take(10)
+                .ToListAsync();
+
+            var results = matchedGuitars.Select(g => new
+            {
+                id = g.Id,
+                brand = g.GuitarBrand?.BrandName ?? "",
+                model = g.GuitarModel ?? "",
+                price = g.GuitarPrice,
+                image = g.Images?.FirstOrDefault()?.FileName
+            });
+
+            return Json(results);
+        }
     }
 }

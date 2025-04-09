@@ -8,7 +8,12 @@
     <aside class="filters">
         <form id="filter-form">
             <p>Поиск</p>
-            <input type="text" id="search-input" name="search" placeholder="Поиск по бренду или модели" style="margin-bottom: 10px;">
+            <div class="search-container">
+                <input type="text" id="search-input" name="search" placeholder="Поиск по бренду или модели" autocomplete="off">
+                <div id="live-search-results" class="live-search-results" style="display: none;"></div>
+            </div>
+
+
 
             <p>Фильтры</p>
 
