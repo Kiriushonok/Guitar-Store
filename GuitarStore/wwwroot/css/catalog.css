@@ -200,7 +200,7 @@ input[type="range"]::-webkit-slider-thumb {
 .product-card-image {
     width: 100%;
     height: 300px;
-    object-fit: cover; /* Заполняет, сохраняя пропорции, и обрезает лишнее */
+    object-fit: contain; /* Заполняет, сохраняя пропорции, и обрезает лишнее */
     display: block;
 }
 

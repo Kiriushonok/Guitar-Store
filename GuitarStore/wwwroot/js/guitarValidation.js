@@ -47,8 +47,8 @@ async function validateGuitarForm() {
         isValid = false;
     }
 
-    if (isNaN(price) || price < 0) {
-        showError(priceInput, 'Цена гитары должна быть положительной');
+    if (isNaN(price) || price < 0 || price > 100_000_000) {
+        showError(priceInput, 'Цена гитары должна быть от 0 до 100 000 000');
         isValid = false;
     }
 
