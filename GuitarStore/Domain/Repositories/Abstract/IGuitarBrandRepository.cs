@@ -8,5 +8,7 @@ namespace GuitarStore.Domain.Repositories.Abstract
         Task<GuitarBrand?> GetGuitarBrandByIdAsync(int id);
         Task SaveGuitarBrandAsync(GuitarBrand brand);
         Task DeleteGuitarBrandAsync(int id);
+        Task<GuitarBrand?> GetGuitarBrandByNameAsync(string name);
+
     }
 }

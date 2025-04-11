@@ -7,7 +7,7 @@
 <main>
     <div class="form-container">
         <h2>@strTitle</h2>
-        <form asp-area="" asp-controller="Admin" asp-action="GuitarsEdit" method="post" enctype="multipart/form-data">
+        <form id="guitarForm" asp-controller="Admin" asp-action="GuitarsEdit" method="post" enctype="multipart/form-data">
             <input type="hidden" asp-for="Id"/>
             <input type="hidden" asp-for="DateCreated" />
             <input type="hidden" asp-for="Images" />
@@ -38,7 +38,7 @@
 
             <div class="form-group">
                 <label asp-for="GuitarYear"></label>
-                <input asp-for="GuitarYear" />
+                <input asp-for="GuitarYear" value="@(Model.GuitarYear == 0 ? DateTime.Now.Year : Model.GuitarYear)" />
                 <span asp-validation-for="GuitarYear"></span>
             </div>
 
@@ -55,8 +55,8 @@
                 {
                     @foreach (var image in Model.Images)
                     {
-                        <div class="img-block">
-                            <img src="~/img/@image.FileName" alt="Гитара" />
+                        <div class="admin-guitar-image-container">
+                            <img src="~/img/@image.FileName" alt="Гитара" class="admin-guitar-image" />
                         </div>
                     }
                 }
@@ -67,3 +67,5 @@
 
     </div>
 </main>
+
+<script src="~/js/guitarValidation.js" asp-append-version="true"></script>

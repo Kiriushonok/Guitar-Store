@@ -7,22 +7,8 @@
       "wwwroot/css/catalog.css",
       "wwwroot/css/contacts.css",
       "wwwroot/css/product.css",
+      "wwwroot/css/admin.css",
       "wwwroot/css/recommendations.css"
-    ]
-  },
-  {
-    "outputFileName": "wwwroot/js/scripts.js",
-    "inputFiles": [
-      "wwwroot/js/filter.js",
-      "wwwroot/js/form.js",
-      "wwwroot/js/product.js",
-      "wwwroot/js/catalog.js"
-    ]
-  },
-  {
-    "outputFileName": "wwwroot/js/scripts.min.min.js",
-    "inputFiles": [
-      "wwwroot/js/scripts.min.js"
     ]
   }
 ]

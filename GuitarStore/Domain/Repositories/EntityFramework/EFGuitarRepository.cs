@@ -62,5 +62,11 @@ namespace GuitarStore.Domain.Repositories.EntityFramework
             await _appDbContext.SaveChangesAsync();
         }
 
+        public async Task<Guitar?> GetGuitarByBrandAndModelAsync(int brandId, string model)
+        {
+            return await _appDbContext.Guitars
+                .FirstOrDefaultAsync(g => g.GuitarBrandId == brandId && g.GuitarModel == model);
+        }
+
     }
 }

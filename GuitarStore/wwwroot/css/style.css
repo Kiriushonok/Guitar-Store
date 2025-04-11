@@ -208,3 +208,6 @@ footer table a:hover {
     color: white;
 }
 
+.text-danger {
+    color: red;
+}

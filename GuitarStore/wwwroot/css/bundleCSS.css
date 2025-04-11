@@ -208,7 +208,9 @@ footer table a:hover {
     color: white;
 }
 
-
+.text-danger {
+    color: red;
+}
 
 .form-container {
     background-color: #fff;
@@ -1020,6 +1022,79 @@ h2, h3 {
 }
 
 
+
+.admin-content-wrapper {
+    max-width: 800px;
+    margin: 40px auto; /* Центрирование по горизонтали + отступ сверху */
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fdfdfd;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    font-family: Arial, sans-serif;
+}
+
+    .admin-content-wrapper h2 {
+        font-size: 28px;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .admin-content-wrapper h3 {
+        font-size: 20px;
+        color: #34495e;
+        margin: 30px 0 10px 0;
+    }
+
+    .admin-content-wrapper a {
+        text-decoration: none;
+        color: #2980b9;
+        margin-bottom: 5px;
+        display: inline-block;
+    }
+
+        .admin-content-wrapper a:hover {
+            text-decoration: underline;
+        }
+
+    .admin-content-wrapper div > div {
+        margin-bottom: 10px;
+    }
+
+.admin-exit-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.admin-exit-button {
+    background-color: cornflowerblue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    width: 120px;
+    padding: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+    .admin-exit-button:hover {
+        background-color: royalblue;
+    }
+
+.admin-guitar-image-container {
+    margin: 10px 0;
+}
+
+.admin-guitar-image {
+    width: 300px;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    object-fit: contain;
+}
 
 /* Основной контейнер страницы */
 .guitar-guide {

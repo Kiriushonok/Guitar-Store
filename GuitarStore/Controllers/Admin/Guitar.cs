@@ -53,5 +53,18 @@ namespace GuitarStore.Controllers.Admin
 
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public async Task<JsonResult> CheckGuitarDuplicate(int brandId, string model, int id = 0)
+        {
+            var existing = await _dataManager.Guitars.GetGuitarByBrandAndModelAsync(brandId, model);
+            if (existing != null && existing.Id != id)
+            {
+                return Json(false); // дубликат найден
+            }
+
+            return Json(true); // уникально
+        }
+
     }
 }
