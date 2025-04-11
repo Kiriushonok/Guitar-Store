@@ -1,83 +1,88 @@
 ﻿document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("filter-form");
-    const catalogContainer = document.getElementById("catalog-container");
-    const prevPageBtn = document.getElementById("prev-page-btn");
-    const nextPageBtn = document.getElementById("next-page-btn");
-    const currentPageSpan = document.getElementById("current-page");
-    const pageIndicator = document.querySelector(".pagination");
-    const priceMinInput = document.getElementById("priceMin");
-    const priceMaxInput = document.getElementById("priceMax");
-    const guitarCountDisplay = document.getElementById("guitar-count");
-    const resetFiltersBtn = document.getElementById("reset-filters");
-    const pageSizeSelect = document.getElementById("page-size-select");
-    const sliderMin = document.getElementById("price-slider-min");
-    const sliderMax = document.getElementById("price-slider-max");
-    const rangeMinLabel = document.getElementById("range-min-label");
-    const rangeMaxLabel = document.getElementById("range-max-label");
+    const $ = id => document.getElementById(id);
+    const $$ = sel => document.querySelector(sel);
 
-    const globalMin = parseInt(sliderMin.min);
-    const globalMax = parseInt(sliderMax.max);
+    const el = {
+        form: $("filter-form"),
+        catalog: $("catalog-container"),
+        prevBtn: $("prev-page-btn"),
+        nextBtn: $("next-page-btn"),
+        pageSpan: $("current-page"),
+        pageIndicator: $$(".pagination"),
+        priceMin: $("priceMin"),
+        priceMax: $("priceMax"),
+        countDisplay: $("guitar-count"),
+        resetBtn: $("reset-filters"),
+        pageSize: $("page-size-select"),
+        sliderMin: $("price-slider-min"),
+        sliderMax: $("price-slider-max"),
+        rangeMinLabel: $("range-min-label"),
+        rangeMaxLabel: $("range-max-label"),
+        search: $("search-input"),
+        liveResults: $("live-search-results"),
+        backToTop: $("back-to-top")
+    };
 
-    const searchInput = document.getElementById("search-input");
-    const liveSearchResults = document.getElementById("live-search-results");
+    const globalMin = parseInt(el.sliderMin.min);
+    const globalMax = parseInt(el.sliderMax.max);
+    const step = calculateStep(globalMin, globalMax);
+
+    let currentPage = 1;
+    let pageSize = parseInt(el.pageSize.value);
     let liveSearchTimeout;
+    let appliedFilters = new URLSearchParams(); // будет содержать только применённые фильтры
 
-    searchInput.addEventListener("input", () => {
-        const query = searchInput.value.trim();
 
+    el.sliderMin.step = step;
+    el.sliderMax.step = step;
+
+    // Live Search
+    el.search.addEventListener("input", () => {
+        const query = el.search.value.trim();
         if (liveSearchTimeout) clearTimeout(liveSearchTimeout);
-
-        if (query.length < 2) {
-            liveSearchResults.style.display = "none";
-            return;
-        }
+        if (query.length < 2) return el.liveResults.style.display = "none";
 
         liveSearchTimeout = setTimeout(() => {
             fetch(`/Guitars/LiveSearch?query=${encodeURIComponent(query)}`)
                 .then(res => res.json())
-                .then(results => {
-                    renderLiveSearch(results);
-                })
+                .then(renderLiveSearch)
                 .catch(() => {
-                    liveSearchResults.innerHTML = "<p>Ошибка поиска</p>";
-                    liveSearchResults.style.display = "block";
+                    el.liveResults.innerHTML = "<p>Ошибка поиска</p>";
+                    el.liveResults.style.display = "block";
                 });
         }, 30);
     });
 
-    searchInput.addEventListener("focus", () => {
-        const query = searchInput.value.trim();
-
-        if (query.length >= 2) {
-            liveSearchResults.style.display = "block";
-        }
+    el.search.addEventListener("focus", () => {
+        if (el.search.value.trim().length >= 2)
+            el.liveResults.style.display = "block";
     });
 
+    document.addEventListener("click", e => {
+        if (!el.liveResults.contains(e.target) && !el.search.contains(e.target))
+            el.liveResults.style.display = "none";
+    });
 
     function renderLiveSearch(results) {
-        if (!results || results.length === 0) {
-            liveSearchResults.innerHTML = "<p>Ничего не найдено</p>";
-            liveSearchResults.style.display = "block";
-            return;
-        }
+        el.liveResults.innerHTML = results?.length
+            ? results.map(g => `
+                <div class="live-search-item" onclick="location.href='/Guitars/Show/${g.id}'">
+                    <img src="/img/${g.image?.trim() || 'noimage_detail.png'}" alt="${g.brand} ${g.model}" />
+                    <div class="live-search-item-title">${g.brand} ${g.model}</div>
+                    <div><strong>${g.price.toLocaleString()} ₽</strong></div>
+                </div>`).join("")
+            : "<p>Ничего не найдено</p>";
 
-        liveSearchResults.innerHTML = results.map(g => `
-        <div class="live-search-item" onclick="location.href='/Guitars/Show/${g.id}'">
-            <img src="/img/${g.image && g.image.trim() !== '' ? g.image : 'noimage_detail.png'}" alt="${g.brand} ${g.model}" />
-            <div class="live-search-item-title">${g.brand} ${g.model}</div>
-            <div><strong>${g.price.toLocaleString()} ₽</strong></div>
-        </div>
-    `).join("");
-
-        liveSearchResults.style.display = "block";
+        el.liveResults.style.display = "block";
     }
 
-    document.addEventListener("click", (e) => {
-        if (!liveSearchResults.contains(e.target) && !searchInput.contains(e.target)) {
-            liveSearchResults.style.display = "none";
-        }
+    // Слайдеры и валидация
+    const priceWarning = document.createElement("p");
+    Object.assign(priceWarning.style, {
+        color: "red", marginTop: "0px", display: "none"
     });
-
+    priceWarning.textContent = "Минимальная цена не может быть больше максимальной!";
+    el.form.insertBefore(priceWarning, el.form.querySelector("button, input[type='submit']"));
 
     function calculateStep(min, max) {
         let step = Math.max(1, Math.round((max - min) / 100));
@@ -86,91 +91,37 @@
     }
 
     function roundToStep(value, step, base) {
-        const relative = (value - base) / step;
-        const rounded = Math.round(relative) * step + base;
-
-        // Если слишком близко к границе — форсируем границу
+        const rounded = Math.round((value - base) / step) * step + base;
         if (Math.abs(rounded - globalMin) < step / 2) return globalMin;
         if (Math.abs(rounded - globalMax) < step / 2) return globalMax;
-
         return Math.min(globalMax, Math.max(globalMin, rounded));
     }
 
-    const step = calculateStep(globalMin, globalMax);
-    sliderMin.step = step;
-    sliderMax.step = step;
+    function onSliderInput(isMin) {
+        const slider = isMin ? el.sliderMin : el.sliderMax;
+        const other = isMin ? el.sliderMax : el.sliderMin;
+        const input = isMin ? el.priceMin : el.priceMax;
+        const label = isMin ? el.rangeMinLabel : el.rangeMaxLabel;
+        const prefix = isMin ? "от" : "до";
 
+        const clamped = isMin
+            ? Math.min(parseInt(slider.value), parseInt(other.value))
+            : Math.max(parseInt(slider.value), parseInt(other.value));
 
-    function onSliderMinInput() {
-        const rawMin = parseInt(sliderMin.value);
-        const step = calculateStep(globalMin, globalMax);
-        const base = globalMin;
+        const rounded = roundToStep(clamped, step, globalMin);
+        if (slider.value != rounded) slider.value = rounded;
 
-        const clampedMin = Math.min(rawMin, parseInt(sliderMax.value));
-        const roundedMin = roundToStep(clampedMin, step, base);
-
-        if (sliderMin.value != roundedMin) {
-            sliderMin.value = roundedMin;
-        }
-
-        priceMinInput.value = roundedMin;
-        rangeMinLabel.textContent = `от ${roundedMin}`;
+        input.value = rounded;
+        label.textContent = `${prefix} ${rounded}`;
         updateSliderTrack();
         validatePriceInputs();
     }
-
-    function onSliderMaxInput() {
-        const rawMax = parseInt(sliderMax.value);
-        const step = calculateStep(globalMin, globalMax);
-        const base = globalMin;
-
-        const clampedMax = Math.max(rawMax, parseInt(sliderMin.value));
-        const roundedMax = roundToStep(clampedMax, step, base);
-
-        if (sliderMax.value != roundedMax) {
-            sliderMax.value = roundedMax;
-        }
-
-        priceMaxInput.value = roundedMax;
-        rangeMaxLabel.textContent = `до ${roundedMax}`;
-        updateSliderTrack();
-        validatePriceInputs();
-    }
-
-
-    function syncInputsToSliders() {
-        let min = parseInt(priceMinInput.value);
-        let max = parseInt(priceMaxInput.value);
-
-        // Проверяем, что значения — это числа
-        if (isNaN(min)) min = globalMin;
-        if (isNaN(max)) max = globalMax;
-
-        // Ограничиваем диапазон
-        min = Math.max(globalMin, Math.min(globalMax, min));
-        max = Math.max(globalMin, Math.min(globalMax, max));
-
-        // Не обновляем слайдеры, если min > max
-        if (min > max) {
-            priceWarning.style.display = "block";
-            return;
-        } else {
-            priceWarning.style.display = "none";
-        }
-
-        sliderMin.value = min;
-        sliderMax.value = max;
-
-        updateSliderTrack();
-    }
-
-
 
     function updateSliderTrack() {
-        const min = parseInt(sliderMin.min);
-        const max = parseInt(sliderMin.max);
-        const valMin = parseInt(sliderMin.value);
-        const valMax = parseInt(sliderMax.value);
+        const min = parseInt(el.sliderMin.min);
+        const max = parseInt(el.sliderMin.max);
+        const valMin = parseInt(el.sliderMin.value);
+        const valMax = parseInt(el.sliderMax.value);
 
         const percentMin = ((valMin - min) / (max - min)) * 100;
         const percentMax = ((valMax - min) / (max - min)) * 100;
@@ -180,163 +131,155 @@
         track.style.width = `${percentMax - percentMin}%`;
     }
 
-    const priceWarning = document.createElement("p");
-    priceWarning.style.color = "red";
-    priceWarning.style.marginTop = "0px";
-    priceWarning.style.display = "none";
-    priceWarning.textContent = "Минимальная цена не может быть больше максимальной!";
-    form.insertBefore(priceWarning, form.querySelector("button, input[type='submit']"));
+    function syncInputsToSliders() {
+        let min = parseInt(el.priceMin.value);
+        let max = parseInt(el.priceMax.value);
+        if (isNaN(min)) min = globalMin;
+        if (isNaN(max)) max = globalMax;
 
-    function validatePriceInputs() {
-        const min = parseFloat(priceMinInput.value);
-        const max = parseFloat(priceMaxInput.value);
+        min = Math.max(globalMin, Math.min(globalMax, min));
+        max = Math.max(globalMin, Math.min(globalMax, max));
 
-        if (!isNaN(min) && !isNaN(max) && min > max) {
+        if (min > max) {
             priceWarning.style.display = "block";
-            return false;
+            return;
         } else {
             priceWarning.style.display = "none";
-            return true;
         }
+
+        el.sliderMin.value = min;
+        el.sliderMax.value = max;
+        updateSliderTrack();
     }
 
-    sliderMin.addEventListener("input", onSliderMinInput);
-    sliderMax.addEventListener("input", onSliderMaxInput);
-    priceMinInput.addEventListener("input", () => {
-        syncInputsToSliders();
-        validatePriceInputs();
-    });
-    priceMaxInput.addEventListener("input", () => {
-        syncInputsToSliders();
-        validatePriceInputs();
-    });
+    function validatePriceInputs() {
+        let min = parseFloat(el.priceMin.value);
+        let max = parseFloat(el.priceMax.value);
 
-    let currentPage = 1;
-    let pageSize = parseInt(pageSizeSelect.value);
+        if (isNaN(min)) {
+            min = globalMin;
+            el.priceMin.value = min;
+        }
+        if (isNaN(max)) {
+            max = globalMax;
+            el.priceMax.value = max;
+        }
 
-    pageSizeSelect.addEventListener("change", () => {
-        pageSize = parseInt(pageSizeSelect.value);
+        const valid = min <= max;
+        priceWarning.style.display = valid ? "none" : "block";
+        return valid;
+    }
+
+
+    el.sliderMin.addEventListener("input", () => onSliderInput(true));
+    el.sliderMax.addEventListener("input", () => onSliderInput(false));
+    el.priceMin.addEventListener("input", () => { syncInputsToSliders(); validatePriceInputs(); });
+    el.priceMax.addEventListener("input", () => { syncInputsToSliders(); validatePriceInputs(); });
+
+    // Пагинация, фильтрация
+    el.pageSize.addEventListener("change", () => {
+        pageSize = parseInt(el.pageSize.value);
         currentPage = 1;
         fetchGuitars();
     });
 
-    resetFiltersBtn.addEventListener("click", () => {
-        form.reset();
-        sliderMin.value = globalMin;
-        sliderMax.value = globalMax;
-        onSliderMinInput();
-        onSliderMaxInput();
+    el.resetBtn.addEventListener("click", () => {
+        el.form.reset();
+        el.sliderMin.value = globalMin;
+        el.sliderMax.value = globalMax;
+        onSliderInput(true);
+        onSliderInput(false);
+
+        appliedFilters = new URLSearchParams(); // сбрасываем фильтры
         currentPage = 1;
         fetchGuitars();
-        validatePriceInputs();
     });
 
-    form.addEventListener("submit", e => {
+
+    el.form.addEventListener("submit", e => {
         e.preventDefault();
         if (!validatePriceInputs()) return;
+
+        appliedFilters = new URLSearchParams(new FormData(el.form)); // сохраняем фильтры
         currentPage = 1;
         fetchGuitars();
     });
 
+
     async function fetchGuitars() {
-        const params = new URLSearchParams(new FormData(form));
-        params.append("page", currentPage);
-        params.append("pageSize", pageSize);
+        const params = new URLSearchParams(appliedFilters.toString());
+        params.set("page", currentPage);
+        params.set("pageSize", pageSize);
 
-        const response = await fetch(`/Guitars/GetFilteredGuitars?${params.toString()}`);
-        const data = await response.json();
+        const res = await fetch(`/Guitars/GetFilteredGuitars?${params.toString()}`);
+        const data = await res.json();
 
-        guitarCountDisplay.textContent = `Найдено гитар: ${data.totalItems}`;
+        el.countDisplay.textContent = `Найдено гитар: ${data.totalItems}`;
         renderGuitars(data.items);
         updatePagination(data.totalPages);
     }
 
+
     function renderGuitars(guitars) {
-        catalogContainer.innerHTML = "";
-
-        if (guitars.length === 0) {
-            catalogContainer.innerHTML = "<p>Ничего не найдено.</p>";
-            return;
-        }
-
-        guitars.forEach(guitar => {
-            const card = document.createElement("a");
-            card.href = `/Guitars/Show/${guitar.id}`;
-            card.className = "product-card-box";
-
-            const hasImage = guitar.guitarImageFileNames && guitar.guitarImageFileNames.length > 0;
-            const imageHtml = hasImage
-                ? `<img src="/img/${guitar.guitarImageFileNames[0]}" 
-             alt="${guitar.guitarBrand} ${guitar.guitarModel}" 
-             class="product-card-image" />`
-                : `<img src="/img/noimage_detail.png" 
-             alt="Нет фото ${guitar.guitarBrand} ${guitar.guitarModel}" 
-             class="product-card-image" />`;
-
-
-            card.innerHTML = `
-                ${imageHtml}
-                <div class="product-card-info">
-                    <div>${guitar.guitarBrand} ${guitar.guitarModel}</div>
-                    <strong>${guitar.guitarPrice.toLocaleString()} ₽</strong>
-                    <p>Тип: ${guitar.guitarType}</p>
-                    <p>Бренд: ${guitar.guitarBrand}</p>
-                </div>`;
-
-            catalogContainer.appendChild(card);
-        });
+        el.catalog.innerHTML = guitars.length
+            ? guitars.map(g => `
+                <a href="/Guitars/Show/${g.id}" class="product-card-box">
+                    <img src="/img/${g.guitarImageFileNames?.[0] || 'noimage_detail.png'}" 
+                         alt="${g.guitarBrand} ${g.guitarModel}" class="product-card-image" />
+                    <div class="product-card-info">
+                        <div>${g.guitarBrand} ${g.guitarModel}</div>
+                        <strong>${g.guitarPrice.toLocaleString()} ₽</strong>
+                        <p>Тип: ${g.guitarType}</p>
+                        <p>Бренд: ${g.guitarBrand}</p>
+                    </div>
+                </a>`).join("")
+            : "<p>Ничего не найдено.</p>";
     }
 
     function updatePagination(totalPages) {
         if (totalPages <= 1) {
-            pageIndicator.style.display = "none";
-        } else {
-            pageIndicator.style.display = "flex";
-            currentPageSpan.textContent = currentPage;
-            prevPageBtn.disabled = currentPage === 1;
-            nextPageBtn.disabled = currentPage === totalPages;
-
-            prevPageBtn.onclick = () => {
-                if (currentPage > 1) {
-                    currentPage--;
-                    fetchGuitars();
-                }
-            };
-
-            nextPageBtn.onclick = () => {
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    fetchGuitars();
-                }
-            };
+            el.pageIndicator.style.display = "none";
+            return;
         }
+
+        el.pageIndicator.style.display = "flex";
+        el.pageSpan.textContent = currentPage;
+        el.prevBtn.disabled = currentPage === 1;
+        el.nextBtn.disabled = currentPage === totalPages;
+
+        el.prevBtn.onclick = () => {
+            if (currentPage > 1) {
+                currentPage--;
+                fetchGuitars();
+            }
+        };
+
+        el.nextBtn.onclick = () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                fetchGuitars();
+            }
+        };
     }
 
-    catalogContainer.addEventListener("mouseover", event => {
-        const card = event.target.closest(".product-card-box");
-        if (card) {
-            card.style.transform = "scale(1.05)";
-            card.style.boxShadow = "0 6px 20px rgba(0, 0, 0, 0.2)";
-            card.style.backgroundColor = "rgba(0, 0, 0, 0.05)";
-        }
-    });
+    // Hover эффект
+    function toggleCardHover(e, hover) {
+        const card = e.target.closest(".product-card-box");
+        if (!card) return;
+        card.style.transform = hover ? "scale(1.05)" : "scale(1)";
+        card.style.boxShadow = hover ? "0 6px 20px rgba(0, 0, 0, 0.2)" : "";
+        card.style.backgroundColor = hover ? "rgba(0, 0, 0, 0.05)" : "";
+    }
 
-    catalogContainer.addEventListener("mouseout", event => {
-        const card = event.target.closest(".product-card-box");
-        if (card) {
-            card.style.transform = "scale(1)";
-            card.style.boxShadow = "";
-            card.style.backgroundColor = "";
-        }
-    });
+    el.catalog.addEventListener("mouseover", e => toggleCardHover(e, true));
+    el.catalog.addEventListener("mouseout", e => toggleCardHover(e, false));
 
-    const backToTopButton = document.getElementById("back-to-top");
-    if (backToTopButton) {
+    // Кнопка "наверх"
+    if (el.backToTop) {
         window.addEventListener("scroll", () => {
-            backToTopButton.style.display = window.scrollY > 300 ? "block" : "none";
+            el.backToTop.style.display = window.scrollY > 300 ? "block" : "none";
         });
-
-        backToTopButton.addEventListener("click", () => {
+        el.backToTop.addEventListener("click", () => {
             window.scrollTo({ top: 0, behavior: "smooth" });
         });
     }

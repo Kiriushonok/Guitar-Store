@@ -49,13 +49,7 @@ namespace GuitarStore.Controllers
         [HttpGet]
         public async Task<IActionResult> GetFilteredGuitars(string? search, string? type, string? brand, int? priceMin, int? priceMax, int page = 1, int pageSize = 6)
         {
-            var allGuitarsQuery = _dataManager.Guitars.GetQueryable(); // Для min/max
-
-            var minPrice = await allGuitarsQuery.MinAsync(g => (decimal?)g.GuitarPrice) ?? 0;
-            var maxPrice = await allGuitarsQuery.MaxAsync(g => (decimal?)g.GuitarPrice) ?? 0;
-
-            // Фильтруем уже отдельно
-            var query = allGuitarsQuery;
+            var query = _dataManager.Guitars.GetQueryable();
 
             if (!string.IsNullOrWhiteSpace(search))
             {
